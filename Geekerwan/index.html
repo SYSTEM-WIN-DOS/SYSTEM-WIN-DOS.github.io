@@ -1,3 +1,239 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:82526401f3a8215a3fa2492e96c7426ab2bf5b02d80050f48c3b8af785bcc2f7
-size 5607
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>极客湾·大横评2026</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: auto;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    background: white;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+nav a {
+    margin-right: 0;
+    text-decoration: none;
+    color: #0077cc;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+section {
+    margin: 60px 0;
+}
+
+.video-container {
+    width: 100%;
+    background: #000;
+}
+
+video {
+    width: 100%;
+}
+button {
+    padding: 10px 24px;
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0077cc, #005fa3);
+    color: #fff;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 119, 204, 0.3);
+}
+button:hover {
+    background: linear-gradient(135deg, #0088ee, #0070c0);
+    box-shadow: 0 4px 12px rgba(0, 119, 204, 0.4);
+    transform: translateY(-1px);
+}
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 119, 204, 0.3);
+}
+.quality-bar {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 14px;
+}
+.quality-bar button {
+    padding: 6px 16px;
+    margin-top: 0;
+    font-size: 13px;
+    font-weight: 500;
+    background: #f0f0f0;
+    color: #444;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: none;
+    touch-action: manipulation;
+    transition: all 0.2s ease;
+}
+.quality-bar button:hover {
+    background: #e4e4e4;
+    border-color: #ccc;
+    box-shadow: none;
+    transform: none;
+}
+.quality-bar button.active {
+    background: #0077cc;
+    color: #fff;
+    border-color: #0077cc;
+    box-shadow: 0 1px 4px rgba(0, 119, 204, 0.3);
+}
+.quality-bar button.active:hover {
+    background: #0088ee;
+    border-color: #0088ee;
+}
+
+footer {
+    border-top: 1px solid #ddd;
+    margin-top: 60px;
+    padding: 30px 0;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+}
+.sponsors {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+.sponsors a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+}
+.sponsors a:hover {
+    opacity: 1;
+}
+.sponsors img {
+    height: 32px;
+    display: block;
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <a href="#v1">(1)大横评2026·无弹幕版</a>
+    <a href="#v2">(2)大横评2026·有弹幕版</a>
+    <a href="#v3">(3)飘哥直播·"不是厂商的事儿"</a>
+</nav>
+
+<section id="v1">
+    <h2>大横评2026·无弹幕版</h2>
+    <video src="Geekerwan.mp4" controls="controls" width="1280"height="720"></video>
+    </section>
+
+<section id="v2">
+    <h2>大横评2026·有弹幕版</h2>
+    <video src="Geekerwan_danmu.mp4" controls="controls" width="1280"height="720"></video>
+    </section>
+
+
+<section id="v3">
+    <h2>飘哥直播·“不是厂商的事儿”</h2>
+    <video src="piaoge.mp4" controls="controls" width="1280"height="720"></video>
+    </section>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.13/hls.min.js"></script>
+
+<script>
+const hlsPlayers = {};
+
+function loadHls(videoId, src, startTime, shouldPlay) {
+    const video = document.getElementById(videoId);
+
+    // Destroy existing instance for this video
+    if (hlsPlayers[videoId]) {
+        hlsPlayers[videoId].destroy();
+        delete hlsPlayers[videoId];
+    }
+
+    if (Hls.isSupported()) {
+        const hls = new Hls({ enableWorker: true });
+        hls.loadSource(src);
+        hls.attachMedia(video);
+        hlsPlayers[videoId] = hls;
+        video.dataset.loaded = "true";
+        video.dataset.src = src;
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+            if (startTime > 0) video.currentTime = startTime;
+            if (shouldPlay) video.play();
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = src;
+        video.dataset.loaded = "true";
+        video.dataset.src = src;
+        if (startTime > 0) video.currentTime = startTime;
+        if (shouldPlay) video.play();
+    }
+}
+
+function playVideo(videoId, src) {
+    const video = document.getElementById(videoId);
+
+    // Pause other videos
+    document.querySelectorAll("video").forEach(v => {
+        if (v !== video) v.pause();
+    });
+
+    // If already loaded, don't recreate the HLS instance
+    if (video.dataset.loaded === "true") {
+        video.play();
+        return;
+    }
+
+    loadHls(videoId, src, 0, true);
+
+    // Show quality bar (if present)
+    const qualityBar = document.getElementById(videoId.replace('video', 'v') + '-quality');
+    if (qualityBar) qualityBar.style.display = 'flex';
+}
+
+function switchQuality(videoId, src, btn) {
+    const video = document.getElementById(videoId);
+    if (video.dataset.src === src) return; // Already at this quality
+
+    const currentTime = video.currentTime;
+    const wasPlaying = !video.paused;
+
+    // Update active button highlight
+    btn.closest('.quality-bar').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    video.dataset.loaded = "false";
+    loadHls(videoId, src, currentTime, wasPlaying);
+}
+</script>
+
+</body>
+</html>
+
